@@ -1,15 +1,9 @@
-<?php
-include('dbcon.php');
-include('navbar.php'); 
-?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-dByWAgbS_9OR_-I5F3lv3mzrobuutzXElQ&usqp=CAU" type="image/icon type">
-
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
       rel="stylesheet"
@@ -19,86 +13,134 @@ include('navbar.php');
     <title>Customer</title>
   </head>
   <body>
-    
 
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
+        <div class="container-fluid">
+          <a class="navbar-brand" href="dashboard.php">Admin panel</a>
+          <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">me-auto</span>
+          </button> -->
+          <!-- <div class="collapse navbar-collapse" id="navbarText"> -->
+            <ul class="navbar-nav  mb-2 mb-lg-0">
+              <li class="nav-item">
+                <a class="nav-link active" href="#">Customer</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="employee.php">Employee</a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link" href="bill.php">Bill</a>
+              </li>
+            </ul>
+          <!-- </div> -->
+        </div>
+      </nav>
     <div class="container">
-    <form class="row g-3" method="post" action="">
-  <div class="col-md-6">
-    <label for="inputEmail4" class="form-label">Coupan</label>
-    <input type="number" name="coupan" placeholder="Numbers only" class="form-control" id="inputEmail4">
-  </div>
-  <div class="col-md-6">
-    <label for="inputPassword4" class="form-label">Name</label>
-    <input type="text" name="name" class="form-control" id="inputPassword4">
-  </div>
-  <div class="col-8">
-    <label for="inputAddress" class="form-label">Address</label>
-    <input type="text" name="address" class="form-control" id="inputAddress" placeholder="1234 Main St">
-  </div>
-  <div class="col-4">
-    <label for="inputAddress2" class="form-label">Phone</label>
-    <input type="text" maxlength="10" name="phone" class="form-control" id="inputAddress2" placeholder="No country code needed">
-  </div>
-  <div class="col-md-6">
-    <label for="inputServe" class="form-label">Service</label>
-          <select class="form-select" id="inputServe" name="service"  aria-label="Default select example">
-            <option value="Dry wash">Dry wash</option>
-            <option value="Lacromat">Lacromat</option>
-            <option value="Wash & Iron">Wash & Iron</option>
-            <option value="Only Iron">Only Iron</option>
-          </select> 
-  </div>
-
-  <div class="col-md-6">
-    <label for="inputState" class="form-label">Staff</label>
-    <select id="inputState" name="staff" class="form-select">
+      <form method='post' action="" >
+        <h2 style="text-align: center;margin:20px;">Customer Details</h2>
+        <div class="row mb-3">
+          <label for="inputEmail3" class="col-sm-2 col-form-label">Name</label>
+          <div class="col-sm-10">
+            <input type="text" name="name" class="form-control" id="inputEmail3" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="inputPassword3" class="col-sm-2 col-form-label"
+            >Coupan ID</label
+          >
+          <small>Note: The Coupan ID should be number only</small>
+          <div class="col-sm-10">
+            <input type="number" name="coupan" class="form-control" id="inputPassword3" />
+          </div>
+        </div>
+        <div class="row mb-3">
+            <label for="inputPassword3" class="col-sm-2 col-form-label"
+            >Staffs</label
+          >
+          <select class="form-select" name="staff" aria-label="Default select example">
           <?php
-            $staff=mysqli_query($link,"SELECT `name` from employee");
-            while($row=mysqli_fetch_array($staff)){
-              echo '<option>'.$row['name'] .'</option>';
-            }
-          ?>
-    </select>
-  </div>
-
-  <div class="col-md-3">
-    <label for="inputZip" class="form-label">Delicate clothes</label>
-    <input value="0" type="number" name="delicate" class="form-control" id="inputPassword3" />
-  </div>
-  <div class="col-md-3">
-    <label for="inputZip" class="form-label">Heavy clothes</label>
-    <input value="0" type="number" name="heavy" class="form-control" id="inputPassword3" />
-  </div>
-  <div class="col-md-3">
-    <label for="inputZip" class="form-label">Kids clothes</label>
-    <input value="0" type="number" name="kids" class="form-control" id="inputPassword3" />
-  </div>
-  <div class="col-md-3">
-    <label for="inputZip" class="form-label">Other</label>
-    <input value="0" type="number" name="other" class="form-control" id="inputPassword3" />
-  </div>
-  <!-- <div class="col-12">
-    <div class="form-check">
-      <input class="form-check-input" type="checkbox" id="gridCheck">
-      <label class="form-check-label" for="gridCheck">
-        Check me out
-      </label>
+$link=new mysqli('localhost','root','','laundry');
+$staff=mysqli_query($link,"SELECT * from employee");
+while($row=mysqli_fetch_array($staff)){
+  echo '<option>'.$row['name'] .'</option>';
+}
+    ?>
+          </select>
+          
+        </div>
+        <div class="row mb-3">
+          <label for="inputPassword3" class="col-sm-2 col-form-label"
+            >Delicate clothes</label
+          >
+          <div class="col-sm-10">
+            <input type="number" name="delicate" class="form-control" id="inputPassword3" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="inputPassword3" class="col-sm-2 col-form-label"
+            >Heavy clothes</label
+          >
+          <div class="col-sm-10">
+            <input type="number" name="heavy" class="form-control" id="inputPassword3" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="inputPassword3" class="col-sm-2 col-form-label"
+            >Kids clothes</label
+          >
+          <div class="col-sm-10">
+            <input type="number" name="kids" class="form-control" id="inputPassword3" />
+          </div>
+        </div>
+        <div class="row mb-3">
+          <label for="inputPassword3" class="col-sm-2 col-form-label"
+            >Other clothes</label
+          >
+          <div class="col-sm-10">
+            <input type="number" name="other" class="form-control" id="inputPassword3" />
+          </div>
+        </div>
+        <div class="row mb-3">
+            <label for="inputPassword3" class="col-sm-2 col-form-label"
+            >Services</label
+          >
+          <select class="form-select" name="service" aria-label="Default select example">
+            <option selected>Dry wash</option>
+            <option value="1">Lacromat</option>
+            <option value="2">Wash & Ironing</option>
+            <option value="3">Only Ironing</option>
+          </select>
+        </div>
+        <div class="row mb-3">
+            <label for="inputPassword3" class="col-sm-2 col-form-label"
+              >Phone No.</label
+            >
+            <div class="col-sm-10">
+              <input name="phone" type="number" class="form-control" id="inputPassword3" />
+            </div>
+          </div>
+          <div class="row mb-3">
+            <label for="inputPassword3" class="col-sm-2 col-form-label"
+              >Address</label
+            >
+            <div class="col-sm-10">
+              <input name="address" type="text" class="form-control" id="inputPassword3" />
+            </div>
+          </div>
+          <div class="row">
+              <input name="submit" type="submit" value="SUBMIT" class="form-control btn btn-primary" id="inputPassword3" />
+            </div>
+          </div>
+      </form>
     </div>
-  </div> -->
-  <div class="col-12">
-  <input name="submit" type="submit" value="SUBMIT" class="form-control btn btn-primary" id="inputPassword3" />
-  </div>
-</form>
-    </div>
-
-
 
     <div class="container-fluid" style="margin-top: 30px;">
       <div class="alert alert-success ml-4"  style="text-align: center;">
           <label>Currently stored customer details are listed below</label>
       </div>
 
-     
+
+
 <?php
 
 $customers=mysqli_query($link,"SELECT * from customer");
@@ -143,7 +185,6 @@ while($row=mysqli_fetch_array($customers)){
 
   echo "</tr>";
 }
-
 
 //Inserting customer data to database
 
@@ -199,7 +240,6 @@ window.location.href='customer.php';
 
 ?>
 
-<?php include('footer.php'); ?>
 
   </body>
 </html>

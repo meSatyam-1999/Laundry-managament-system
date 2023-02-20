@@ -1,5 +1,6 @@
 <?php
-include('dbcon.php');
+$link=new mysqli('localhost','root','','laundry');
+
 $values=mysqli_query($link,"SELECT * from employee where eid='$_GET[id]'");
 while($row=mysqli_fetch_array($values)){
     $name=$row['name'];
@@ -64,7 +65,7 @@ while($row=mysqli_fetch_array($values)){
           <div class="row mb-3">
             <label for="inputEmail3" class="col-sm-2 col-form-label">Phone No.</label>
             <div class="col-sm-10">
-              <input name="phone" type="text" maxlength="10" class="form-control" id="inputEmail3" value="<?php echo $phone; ?>"/>
+              <input name="phone" type="text" class="form-control" id="inputEmail3" value="<?php echo $phone; ?>"/>
             </div>
           </div>
           <div class="row mb-3">

@@ -1,5 +1,5 @@
 <?php
-include('dbcon.php');
+$link=new mysqli('localhost','root','','laundry');
 
 $values=mysqli_query($link,"SELECT * from customer where cid='$_GET[id]'");
 while($row=mysqli_fetch_array($values)){
@@ -80,6 +80,7 @@ while($row=mysqli_fetch_array($values)){
           >
           <select class="form-select" name="staff" aria-label="Default select example" value="<?php echo $staff; ?>">
           <?php
+$link=new mysqli('localhost','root','','laundry');
 $staff=mysqli_query($link,"SELECT * from employee");
 while($row=mysqli_fetch_array($staff)){
   echo '<option>'.$row['name'] .'</option>';
@@ -125,10 +126,10 @@ while($row=mysqli_fetch_array($staff)){
             >Services</label
           >
           <select class="form-select" name="service" aria-label="Default select example" value="<?php echo $service; ?>">
-            <option value="Dry wash">Dry wash</option>
-            <option value="Lacromat">Lacromat</option>
-            <option value="Wash & Iron">Wash & Iron</option>
-            <option value="Only Iron">Only Iron</option>
+            <option selected>Dry wash</option>
+            <option value="1">Lacromat</option>
+            <option value="2">Wash & Ironing</option>
+            <option value="3">Only Ironing</option>
           </select>
         </div>
         <div class="row mb-3">
@@ -149,10 +150,7 @@ while($row=mysqli_fetch_array($staff)){
           </div>
           <div class="row">
               <input name="update" type="submit" value="UPDATE" class="form-control btn btn-success" id="inputPassword3" />
-              <br><br>
-          </div>
-          <br>
-          <br>
+            </div>
           </div>
       </form>
     </div>

@@ -1,7 +1,3 @@
-<?php
-include('dbcon.php'); 
-include('navbar.php'); 
-?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -17,49 +13,40 @@ include('navbar.php');
     <title>Bill</title>
 </head>
 <body>
-  <?php
-    $sql = mysqli_query($link,"SELECT count(*) as count  from customer where `service`= 'Wash & Iron' ");
-    $wni = mysqli_fetch_array($sql);
-
-    $sql2 = mysqli_query($link,"SELECT count(*) as count  from customer where `service`= 'Dry wash' ");
-    $dry = mysqli_fetch_array($sql2);
-
-    $sql3 = mysqli_query($link,"SELECT count(*) as count  from customer where `service`= 'Lacromat' ");
-    $lac = mysqli_fetch_array($sql3);
-
-    $sql4 = mysqli_query($link,"SELECT count(*)  as count from customer where `service`= 'Only Iron' ");
-    $iron = mysqli_fetch_array($sql4);
-
-    $tot = $wni['count'] + $dry['count'] + $lac['count'] + $iron['count'];
-
-    $wash = $wni['count'] / $tot * 100; 
-    $drywash = $dry['count'] / $tot * 100; 
-    $lacro = $lac['count'] / $tot * 100; 
-    $irononly = $iron['count'] / $tot * 100; 
-
-
-  ?>
-  <div class="container">
-  <div class="progress">
-  <div class="progress-bar bg-warning" role="progressbar" style="width: <?=$wash;?>%" aria-valuenow="<?=$wash;?>" aria-valuemin="0" aria-valuemax="100"><?=$wash;?>%</div>
-  <div class="progress-bar bg-success" role="progressbar" style="width: <?=$drywash;?>%" aria-valuenow="<?=$drywash;?>" aria-valuemin="0" aria-valuemax="100"><?=$drywash;?>%</div>
-  <div class="progress-bar bg-info" role="progressbar" style="width: <?=$lacro;?>%" aria-valuenow="<?=$lacro;?>" aria-valuemin="0" aria-valuemax="100"><?=$lacro;?>%</div>
-  <div class="progress-bar bg-danger" role="progressbar" style="width: <?=$irononly;?>%" aria-valuenow="<?=$irononly;?>" aria-valuemin="0" aria-valuemax="100"><?=$irononly;?>%</div>
-</div>
-  </div>
-
+<nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="dashboard.php">Admin panel</a>
+        <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">me-auto</span>
+          </button> -->
+        <!-- <div class="collapse navbar-collapse" id="navbarText"> -->
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="customer.php">Customer</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="employee.php">Employee</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link active" href="#">Bill</a>
+          </li>
+        </ul>
+        <!-- </div> -->
+      </div>
+    </nav>
 <div class="container-fluid" style="margin-top: 30px;">
         <div class="alert alert-success ml-4"  style="text-align: center;">
-            <label>Bills of all <?=$tot;?> customers are listed below:</label>
+            <label>Bills of all customers are listed below:</label>
         </div>
 
       </div>
 <?php
-$bill=mysqli_query($link,"SELECT c.cid,c.cname,c.coupan,b.heavy,b.delicate,b.kids,b.other,b.total,`service` from bill b,customer c  where c.cid=b.cid");
+$link=new mysqli('localhost','root','','laundry');
+$bill=mysqli_query($link,"SELECT c.cid,c.cname,c.coupan,b.heavy,b.delicate,b.kids,b.other,b.total from bill b,customer c  where c.cid=b.cid");
 
 
 
-echo "<table class='table table-dark container'>
+echo "<table class='table table-dark'>
 <tr>
 <th scope='col'>Name</th>
 <th scope='col'>Heavy</th>
@@ -67,22 +54,19 @@ echo "<table class='table table-dark container'>
 <th scope='col'>Kids</th>
 <th scope='col'>Other</th>
 <th scope='col'>Total price</th>
-<th scope='col'>Service</th>
-<th scope='col'> Status</th>
-<th scope='col'>Payment</th>
+<th scope='col'>Laundry Status</th>
+<th scope='col'>Paid Status</th>
 </tr>";
 
-$user_view=mysqli_query($link,"SELECT * from `user_view`");
+$user_view=mysqli_query($link,"SELECT * from user_view");
 
 while($row=mysqli_fetch_array($bill)){
-  $name=$row['cname'];
+    $name=$row['cname'];
   $h=$row['heavy'];
   $k=$row['kids'];
   $d=$row['delicate'];
   $o=$row['other'];
   $total=$row['total'];
-  $service = $row['service'];
-
 
  
   
@@ -95,45 +79,14 @@ while($row=mysqli_fetch_array($bill)){
     echo "<td>"; echo $total;echo "</td>";
   
 
-    $r=mysqli_fetch_array($user_view);
-      $L_status=$r['L_status'];
-      $P_status=$r['P_status'];
+    $row=mysqli_fetch_array($user_view);
+      $L_status=$row['L_status'];
+      $P_status=$row['P_status'];
     
     
-    echo "<td>";?><button class="btn 
-    <?php 
-
-        if($service=='Dry wash'){
-          echo "btn-success";
-        }
-        else if($service=='Lacromat'){
-          echo "btn-info";
-        }
-        else if($service=='Only Iron'){
-          echo "btn-danger";
-        }
-        else{
-          echo "btn-warning";
-        }
-
-    ?>"><?=$service;?></button><?php echo "</td>";
-    echo "<td>"; ?><a href="set_status.php?id=<?php echo $row["cid"]; ?>">  
-    <button type="text/javascript" class="btn <?php if($L_status=='Done')
-    {
-      echo 'btn-outline-success';
-    }
-     else{
-       echo 'btn-outline-warning';
-      } ?>"><?php echo $L_status;  ?></button></a><?php echo "</td>" ;
-    echo "<td>"; ?> <a href="set_payment.php?id=<?php echo $row["cid"]; ?>"> <button type="text/javascript" class="btn 
-    <?php 
-    if($P_status=='Paid'){
-      echo 'btn-outline-success';
-    }
-    else{
-      echo 'btn-outline-danger';
-    }
-    ?>"><?php echo $P_status;  ?></button></a><?php echo "</td>" ;
+    
+    echo "<td>"; ?><a href="set_status.php?id=<?php echo $row["cid"]; ?>">  <button type="text/javascript" class='btn btn-primary'><?php echo $L_status;  ?></button></a><?php echo "</td>" ;
+    echo "<td>"; ?> <a href="set_payment.php?id=<?php echo $row["cid"]; ?>"> <button type="text/javascript" class='btn btn-danger'><?php echo $P_status;  ?></button></a><?php echo "</td>" ;
 
     echo "</tr>";
   
@@ -148,18 +101,5 @@ while($row=mysqli_fetch_array($bill)){
 
 
 ?>
-<style>
-  .progress{
-    height: 2rem;
-    border-radius: 20px;
-    box-shadow: 0 0 6px 1px #666;
-    cursor: pointer;
-  }
-  .progress-bar{
-    font-weight: 900;
-  }
-</style>
-<?php include('footer.php'); ?>
-
 </body>
 </html>

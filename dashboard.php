@@ -1,15 +1,9 @@
-<?php
-include('dbcon.php');
-
-?>
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="icon" href="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT-dByWAgbS_9OR_-I5F3lv3mzrobuutzXElQ&usqp=CAU" type="image/icon type">
-
     <!-- CSS only -->
     <link
       href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css"
@@ -30,30 +24,45 @@ include('dbcon.php');
            </div>
        </section> -->
 <?php
+$link=new mysqli('localhost','root','','laundry');
 
 $query1=mysqli_query($link,"SELECT sum(total) as total from bill ");
-$today = date("Y-m-d");
-$query2=mysqli_query($link,"SELECT count(*) as count from customer where `date` = '$today'  ");
-$query3=mysqli_query($link,"SELECT count(*) as count from user_view where L_status='Done' and P_status='Paid' ");
+$query2=mysqli_query($link,"SELECT count(cid) as count from customer  ");
+$query3=mysqli_query($link,"SELECT count(L_status) as count from user_view where L_status='Done' and P_status='Paid' ");
 $t=mysqli_fetch_array($query1);
 $total=$t['total'];
 
-$num= mysqli_num_rows($query2);
-if($num >0){
-  $c=mysqli_fetch_array($query2);
-  $cust=$c['count'];
-  
-}
+$c=mysqli_fetch_array($query2);
+$cust=$c['count'];
 
 $cl=mysqli_fetch_array($query3);
 $claim=$cl['count'];
 
 ?>
 
-<?php include('./navbar.php'); ?>
 
-<div class="container d-flex flex-row justify-content-around">
-<div class="alert alert-success ">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark mb-5">
+      <div class="container-fluid">
+        <a class="navbar-brand" href="#">Admin panel</a>
+        <!-- <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon">me-auto</span>
+          </button> -->
+        <!-- <div class="collapse navbar-collapse" id="navbarText"> -->
+        <ul class="navbar-nav mb-2 mb-lg-0">
+          <li class="nav-item">
+            <a class="nav-link" href="customer.php">Customer</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="employee.php">Employee</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="bill.php">Bill</a>
+          </li>
+        </ul>
+        <!-- </div> -->
+      </div>
+    </nav>
+    <div class="alert alert-success ml-4">
       <p>
         <b><large>Total Transactions</large></b>
       </p>
@@ -66,9 +75,9 @@ $claim=$cl['count'];
         >
       </p>
     </div>
-    <div class="alert alert-danger">
+    <div class="alert alert-danger ml-4">
       <p>
-        <b><large>Total Today's Customers</large></b>
+        <b><large>Total Customer Today</large></b>
       </p>
       <hr />
       <p class="text-right">
@@ -79,12 +88,9 @@ $claim=$cl['count'];
         >
       </p>
     </div>
-    <div class="alert alert-primary">
+    <div class="alert alert-primary ml-4">
       <p>
-        <b><large>Total Paid and Claimed Laundries</large></b>
-        <form action="" method="post">
-          <button name="clear" class="clear-btn" type="submit">Clear</button>
-        </form>
+        <b><large>Total Paid and Claimed Laundry</large></b>
       </p>
       <hr />
       <p class="text-right">
@@ -95,18 +101,12 @@ $claim=$cl['count'];
         >
       </p>
     </div>
-</div>
 
-<?php
-
-if(isset($_POST['clear'])){
-  mysqli_query($link,"DELETE from customer where  cid in(select cid from user_view where L_status='Done' and P_status='Paid') ");
-}
-?>
 
 
 <?php
-try{
+$link=new mysqli('localhost','root','','laundry');
+
 $prices=mysqli_query($link,"SELECT * from price");
 while($row=mysqli_fetch_array($prices)){
   $h=$row['heavy'];
@@ -114,20 +114,15 @@ while($row=mysqli_fetch_array($prices)){
   $d=$row['delicate'];
   $o=$row['other'];
 }
-}
-catch(Exception $e) {
-  echo 'Message: ' .$e->getMessage();
-}
 
 ?>
-<hr>
 <form action="" method="post">
-  <br><br>
-  <div class="container col-md-4">
-  <h2>Set the Prices:</h2>
-<div class="input-group mb-3 ">
+  <div class="container">
+  <div class="input-group mb-3">
+    <label>For Delicate</label>
+<div class="input-group mb-3">
   <div class="input-group-prepend">
-    <span class="input-group-text">For Delicate ₹</span>
+    <span class="input-group-text">₹</span>
   </div>
   <input type="number"  name="delicate" required class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="For Delicate" value="<?php echo $d;  ?>" >
   <div class="input-group-append">
@@ -137,8 +132,9 @@ catch(Exception $e) {
 
 
 <div class="input-group mb-3">
+<label>For Kids</label>
   <div class="input-group-prepend">
-    <span class="input-group-text">For Kids ₹</span>
+    <span class="input-group-text">₹</span>
   </div>
   <input type="number" name="kids" required class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="For Kids" value="<?php echo $k;  ?>" >
   <div class="input-group-append">
@@ -148,8 +144,9 @@ catch(Exception $e) {
 
 
 <div class="input-group mb-3">
+<label for="">For Heavy</label>
   <div class="input-group-prepend">
-    <span class="input-group-text">For Heavy ₹</span>
+    <span class="input-group-text">₹</span>
   </div>
   <input type="number" name="heavy" required class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="For Heavy"  value="<?php echo $h;  ?>" >
   <div class="input-group-append">
@@ -158,9 +155,9 @@ catch(Exception $e) {
 </div>
 
 <div class="input-group mb-3">
-
+<label for="">For Other</label>
   <div class="input-group-prepend">
-    <span class="input-group-text">For Other ₹</span>
+    <span class="input-group-text">₹</span>
   </div>
   <input type="number" name="other" required class="form-control" aria-label="Amount (to the nearest dollar)" placeholder="For Other" value="<?php echo $o;  ?>" >
   <div class="input-group-append">
@@ -169,9 +166,9 @@ catch(Exception $e) {
 </div>
 <input type="submit" name="set" value="SET PRICE" class="btn btn-primary" />
   </div>
-  <br><br>
+  
 </form>
-    <br><br>
+    
 <?php
 
 
@@ -187,20 +184,5 @@ if(isset($_POST['set'])){
 
 ?>
 
-<style>
-  .clear-btn{
-    position: absolute;
-    right: 2%;
-    bottom: 5%;
-    border: none;
-    outline: none;
-    background: red;
-    color: #fff;
-    font-weight: 600;
-    border-radius: 5px;
-    box-shadow: 0 0 3px 2px #555;
-  }
-</style>
-<?php include('footer.php'); ?>
   </body>
 </html>
